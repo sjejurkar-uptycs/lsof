@@ -70,7 +70,7 @@ readj2lino(ga, li)
 	||  !ga->gn_data
 	||  kread((KA_T)ga->gn_data, (char *)&i, sizeof(i)))
 	    return(1);
-	li->dev = i.i_dev;
+	li->dev = ga->gn_rdev;
 	li->nlink = i.i_nlink;
 	li->number = (INODETYPE)i.i_number;
 	li->size = i.i_size;
