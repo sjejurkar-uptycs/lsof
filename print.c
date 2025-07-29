@@ -4,15 +4,16 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdarg.h>
+#include <arpa/inet.h>
 
 /*creating custom output struct to fetch the results inside the osquery */
-
 
 void init_output_buffer(output_buffer *buf){
         buf->len=0;
         buf->cap=1024;
         buf->data=(char *) malloc(buf->cap);
-        buf->data[0]="\0";
+        buf->data[0]='\0';
 }
 
 void append_buffer(output_buffer *buf, const char* fmt, ...){
