@@ -15,7 +15,7 @@ void init_output_buffer(output_buffer *buf){
         buf->data[0]="\0";
 }
 
-void append_buffer(output_buffer *buf, const char* fmt){
+void append_buffer(output_buffer *buf, const char* fmt, ...){
         va_list args;
 
         while (1) {
