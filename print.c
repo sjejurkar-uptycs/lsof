@@ -6,11 +6,7 @@
 #include <stdio.h>
 
 /*creating custom output struct to fetch the results inside the osquery */
-typedef struct output_buffer{
-        char* data;
-        size_t len;
-        size_t cap;
-}output_buffer;
+
 
 void init_output_buffer(output_buffer *buf){
         buf->len=0;
