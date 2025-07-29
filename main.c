@@ -1849,7 +1849,7 @@ main2(int argc, char *argv[])
 	    }
 	}
 	printf("\nI am printing the buffer\n");
-	printf("%s", buf->data);
+	printf("%s", g_buf->data);
 
 	if (!rv && rc)
 	    rv = ev;
