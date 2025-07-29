@@ -90,7 +90,7 @@ main2(int argc, char *argv[])
 	int pr_count = 0;
     output_buffer *g_buf;
     init_output_buffer(g_buf);
-	
+
 #if	defined(HAS_STRFTIME)
 	char *fmt = (char *)NULL;
 	size_t fmtl = (size_t)0;
@@ -1848,6 +1848,9 @@ main2(int argc, char *argv[])
 			(unsigned long)Suid[i].uid);
 	    }
 	}
+	printf("\nI am printing the buffer\n");
+	printf("%s", buf->data);
+
 	if (!rv && rc)
 	    rv = ev;
 	if (!rv && ErrStat)
