@@ -1,37 +1,46 @@
-/*
- * print.c - common print support functions for lsof
- */
-
-
-/*
- * Copyright 1994 Purdue Research Foundation, West Lafayette, Indiana
- * 47907.  All rights reserved.
- *
- * Written by Victor A. Abell
- *
- * This software is not subject to any license of the American Telephone
- * and Telegraph Company or the Regents of the University of California.
- *
- * Permission is granted to anyone to use this software for any purpose on
- * any computer system, and to alter it and redistribute it freely, subject
- * to the following restrictions:
- *
- * 1. Neither the authors nor Purdue University are responsible for any
- *    consequences of the use of this software.
- *
- * 2. The origin of this software must not be misrepresented, either by
- *    explicit claim or by omission.  Credit to the authors and Purdue
- *    University must appear in documentation and sources.
- *
- * 3. Altered versions must be plainly marked as such, and must not be
- *    misrepresented as being the original software.
- *
- * 4. This notice may not be removed or altered.
- */
 
 #include "lsof.h"
 
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
 
+/*creating custom output struct to fetch the results inside the osquery */
+typedef struct output_buffer{
+        char* data;
+        size_t len;
+        size_t cap;
+}output_buffer;
+
+void init_output_buffer(output_buffer *buf){
+        buf->len=0;
+        buf->cap=1024;
+        buf->data=(char *) malloc(buf->cap);
+        buf->data[0]="\0";
+}
+
+void append_buffer(output_buffer *buf, const char* fmt){
+        va_list args;
+
+        while (1) {
+                va_start(args, fmt);
+                int available = buf->cap - buf->len;
+                int written = vsnprintf(buf->data + buf->len, available, fmt, args);
+                va_end(args);
+
+                if (written < 0) return;
+
+                if (written < available) {
+                        buf->len += written;
+                        return;
+                }
+
+               // Reallocate
+                buf->cap *= 2;
+                buf->data = realloc(buf->data, buf->cap);
+    }
+
+}
 /*
  * Local definitions, structures and function prototypes
  */
@@ -656,11 +665,11 @@ lkup_svcnam(h, p, pr, ss)
 
 
 /*
- * print_file() - print file
+ * print_file(output_buffer* g_buf) - print file
  */
 
 void
-print_file()
+print_file(output_buffer* g_buf)
 {
 	char buf[128];
 	char *cp = (char *)NULL;
@@ -673,34 +682,34 @@ print_file()
 	 * Print the header line if this is the second pass and the
 	 * header hasn't already been printed.
 	 */
-	    (void) printf("%-*.*s %*s", CmdColW, CmdColW, CMDTTL, PidColW,
+	    append_buffer(g_buf,"%-*.*s %*s", CmdColW, CmdColW, CMDTTL, PidColW,
 		PIDTTL);
 
 #if	defined(HASTASKS)
 	    if (TaskPrtTid)
-		(void) printf(" %*s", TaskTidColW, TASKTIDTTL);
+		append_buffer(g_buf," %*s", TaskTidColW, TASKTIDTTL);
 	    if (TaskPrtCmd)
-		(void) printf(" %-*.*s", TaskCmdColW, TaskCmdColW, TASKCMDTTL);
+		append_buffer(g_buf," %-*.*s", TaskCmdColW, TaskCmdColW, TASKCMDTTL);
 #endif	/* defined(HASTASKS) */
 
 #if	defined(HASZONES)
 	    if (Fzone)
-		(void) printf(" %-*s", ZoneColW, ZONETTL);
+		append_buffer(g_buf," %-*s", ZoneColW, ZONETTL);
 #endif	/* defined(HASZONES) */
 
 #if	defined(HASSELINUX)
 	    if (Fcntx)
-		(void) printf(" %-*s", CntxColW, CNTXTTL);
+		append_buffer(g_buf," %-*s", CntxColW, CNTXTTL);
 #endif /* defined(HASSELINUX) */
 
 #if	defined(HASPPID)
 	    if (Fppid)
-	 	(void) printf(" %*s", PpidColW, PPIDTTL);
+	 	append_buffer(g_buf," %*s", PpidColW, PPIDTTL);
 #endif	/* defined(HASPPID) */
 
 	    if (Fpgid)
-		(void) printf(" %*s", PgidColW, PGIDTTL);
-	    (void) printf(" %*s %*s   %*s",
+		append_buffer(g_buf," %*s", PgidColW, PGIDTTL);
+	    append_buffer(g_buf," %*s %*s   %*s",
 		UserColW, USERTTL,
 		FdColW - 2, FDTTL,
 		TypeColW, TYPETTL);
@@ -710,37 +719,37 @@ print_file()
 
 # if	!defined(HASNOFSADDR)
 		if (Fsv & FSV_FA)
-		    (void) printf(" %*s", FsColW, FSTTL);
+		    append_buffer(g_buf," %*s", FsColW, FSTTL);
 # endif	/* !defined(HASNOFSADDR) */
 
 # if	!defined(HASNOFSCOUNT)
 		if (Fsv & FSV_CT)
-		    (void) printf(" %*s", FcColW, FCTTL);
+		    append_buffer(g_buf," %*s", FcColW, FCTTL);
 # endif	/* !defined(HASNOFSCOUNT) */
 
 # if	!defined(HASNOFSFLAGS)
 		if (Fsv & FSV_FG)
-		    (void) printf(" %*s", FgColW, FGTTL);
+		    append_buffer(g_buf," %*s", FgColW, FGTTL);
 # endif	/* !defined(HASNOFSFLAGS) */
 
 # if	!defined(HASNOFSNADDR)
 		if (Fsv & FSV_NI)
-		    (void) printf(" %*s", NiColW, NiTtl);
+		    append_buffer(g_buf," %*s", NiColW, NiTtl);
 # endif	/* !defined(HASNOFSNADDR) */
 
 	    }
 #endif	/* defined(HASFSTRUCT) */
 
-	    (void) printf(" %*s", DevColW, DEVTTL);
+	    append_buffer(g_buf," %*s", DevColW, DEVTTL);
 	    if (Foffset)
-		(void) printf(" %*s", SzOffColW, OFFTTL);
+		append_buffer(g_buf," %*s", SzOffColW, OFFTTL);
 	    else if (Fsize)
-		(void) printf(" %*s", SzOffColW, SZTTL);
+		append_buffer(g_buf," %*s", SzOffColW, SZTTL);
 	    else
-		(void) printf(" %*s", SzOffColW, SZOFFTTL);
+		append_buffer(g_buf," %*s", SzOffColW, SZOFFTTL);
 	    if (Fnlink)
-		(void) printf(" %*s", NlColW, NLTTL);
-	    (void) printf(" %*s %s\n", NodeColW, NODETTL, NMTTL);
+		append_buffer(g_buf," %*s", NlColW, NLTTL);
+	    append_buffer(g_buf," %*s %s\n", NodeColW, NODETTL, NMTTL);
 	    Hdr++;
 	}
 	/*
@@ -766,7 +775,7 @@ print_file()
 	    if ((len = strlen(buf)) > PidColW)
 		PidColW = len;
 	} else
-	    (void) printf(" %*d", PidColW, Lp->pid);
+	    append_buffer(g_buf," %*d", PidColW, Lp->pid);
 
 #if	defined(HASTASKS)
 /*
@@ -790,9 +799,9 @@ print_file()
 	} else {
 	    if (TaskPrtTid) {
 		if (Lp->tid)
-		    (void) printf(" %*d", TaskTidColW, Lp->tid);
+		    append_buffer(g_buf," %*d", TaskTidColW, Lp->tid);
 		else
-		    (void) printf(" %*s", TaskTidColW, "");
+		    append_buffer(g_buf," %*s", TaskTidColW, "");
 	    }
 	    if (TaskPrtCmd) {
 		cp = Lp->tcmd ? Lp->tcmd : "";
@@ -813,7 +822,7 @@ print_file()
 			ZoneColW = len;
 		}
 	    } else
-		(void) printf(" %-*s", ZoneColW, Lp->zn ? Lp->zn : "");
+		append_buffer(g_buf," %-*s", ZoneColW, Lp->zn ? Lp->zn : "");
 	}
 #endif	/* defined(HASZONES) */
 
@@ -828,7 +837,7 @@ print_file()
 			CntxColW = len;
 		}
 	    } else
-		(void) printf(" %-*s", CntxColW, Lp->cntx ? Lp->cntx : "");
+		append_buffer(g_buf," %-*s", CntxColW, Lp->cntx ? Lp->cntx : "");
 	}
 #endif	/* defined(HASSELINUX) */
 
@@ -843,7 +852,7 @@ print_file()
 		if ((len = strlen(buf)) > PpidColW)
 		    PpidColW = len;
 	    } else
-		(void) printf(" %*d", PpidColW, Lp->ppid);
+		append_buffer(g_buf," %*d", PpidColW, Lp->ppid);
 	}
 #endif	/* defined(HASPPID) */
 
@@ -857,7 +866,7 @@ print_file()
 		if ((len = strlen(buf)) > PgidColW)
 		    PgidColW = len;
 	    } else
-		(void) printf(" %*d", PgidColW, Lp->pgid);
+		append_buffer(g_buf," %*d", PgidColW, Lp->pgid);
 	}
 /*
  * Size or print the user ID or login name.
@@ -866,7 +875,7 @@ print_file()
 	    if ((len = strlen(printuid((UID_ARG)Lp->uid, NULL))) > UserColW)
 		UserColW = len;
 	} else
-	    (void) printf(" %*.*s", UserColW, UserColW,
+	    append_buffer(g_buf," %*.*s", UserColW, UserColW,
 		printuid((UID_ARG)Lp->uid, NULL));
 /*
  * Size or print the file descriptor, access mode and lock status.
@@ -881,7 +890,7 @@ print_file()
 	    if ((len = strlen(buf)) > FdColW)
 		FdColW = len;
 	} else
-	    (void) printf(" %*.*s%c%c", FdColW - 2, FdColW - 2, Lf->fd,
+	    append_buffer(g_buf," %*.*s%c%c", FdColW - 2, FdColW - 2, Lf->fd,
 		(Lf->lock == ' ') ? Lf->access
 				  : (Lf->access == ' ') ? '-'
 							: Lf->access,
@@ -893,7 +902,7 @@ print_file()
 	    if ((len = strlen(Lf->type)) > TypeColW)
 		TypeColW = len;
 	} else
-	    (void) printf(" %*.*s", TypeColW, TypeColW, Lf->type);
+	    append_buffer(g_buf," %*.*s", TypeColW, TypeColW, Lf->type);
 
 #if	defined(HASFSTRUCT)
 /*
@@ -911,7 +920,7 @@ print_file()
 		    if ((len = strlen(cp)) > FsColW)
 			FsColW = len;
 		} else
-		    (void) printf(" %*.*s", FsColW, FsColW, cp);
+		    append_buffer(g_buf," %*.*s", FsColW, FsColW, cp);
 
 	    }
 # endif	/* !defined(HASNOFSADDR) */
@@ -927,7 +936,7 @@ print_file()
 		    if ((len = strlen(cp)) > FcColW)
 			FcColW = len;
 		} else
-		    (void) printf(" %*.*s", FcColW, FcColW, cp);
+		    append_buffer(g_buf," %*.*s", FcColW, FcColW, cp);
 	    }
 # endif	/* !defined(HASNOFSCOUNT) */
 
@@ -941,7 +950,7 @@ print_file()
 		    if ((len = strlen(cp)) > FgColW)
 			FgColW = len;
 		} else
-		    (void) printf(" %*.*s", FgColW, FgColW, cp);
+		    append_buffer(g_buf," %*.*s", FgColW, FgColW, cp);
 	    }
 # endif	/* !defined(HASNOFSFLAGS) */
 
@@ -953,7 +962,7 @@ print_file()
 		    if ((len = strlen(cp)) > NiColW)
 			NiColW = len;
 		} else
-		    (void) printf(" %*.*s", NiColW, NiColW, cp);
+		    append_buffer(g_buf," %*.*s", NiColW, NiColW, cp);
 	    }
 # endif	/* !defined(HASNOFSNADDR) */
 
@@ -995,12 +1004,12 @@ print_file()
 		DevColW = len;
 	} else {
 	    if (devs)
-		(void) printf(" %*.*s", DevColW, DevColW, cp);
+		append_buffer(g_buf," %*.*s", DevColW, DevColW, cp);
 	    else {
 		if (Lf->dev_ch)
-		    (void) printf(" %*.*s", DevColW, DevColW, Lf->dev_ch);
+		    append_buffer(g_buf," %*.*s", DevColW, DevColW, Lf->dev_ch);
 		else
-		    (void) printf(" %*.*s", DevColW, DevColW, "");
+		    append_buffer(g_buf," %*.*s", DevColW, DevColW, "");
 	    }
 	}
 /*
@@ -1047,7 +1056,7 @@ print_file()
 		} else {
 		    (void) snpf(buf, sizeof(buf), SzOffFmt_d, Lf->sz);
 		    len = strlen(buf);
-		    (void) printf(SzOffFmt_dv, SzOffColW, Lf->sz);
+		    append_buffer(g_buf,SzOffFmt_dv, SzOffColW, Lf->sz);
 		}
 	    }
 	    else if (Lf->off_def) {
@@ -1069,9 +1078,9 @@ print_file()
 #endif	/* defined(HASPRINTOFF) */
 
 		}
-		(void) printf("%*.*s", SzOffColW, SzOffColW, cp);
+		append_buffer(g_buf,"%*.*s", SzOffColW, SzOffColW, cp);
 	    } else
-		(void) printf("%*.*s", SzOffColW, SzOffColW, "");
+		append_buffer(g_buf,"%*.*s", SzOffColW, SzOffColW, "");
 	}
 /*
  * Size or print the link count.
@@ -1086,7 +1095,7 @@ print_file()
 		if ((len = strlen(cp)) > NlColW)
 		    NlColW = len;
 	    } else
-		(void) printf(" %*s", NlColW, cp);
+		append_buffer(g_buf," %*s", NlColW, cp);
 	}
 /*
  * Size or print the inode information.
@@ -1119,7 +1128,7 @@ print_file()
 	    if ((len = strlen(cp)) > NodeColW)
 		NodeColW = len;
 	} else {
-	    (void) printf(" %*.*s", NodeColW, NodeColW, cp);
+	    append_buffer(g_buf," %*.*s", NodeColW, NodeColW, cp);
 	}
 /*
  * If this is the second pass, print the name column.  (It doesn't need

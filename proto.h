@@ -106,7 +106,7 @@ _PROTOTYPE(extern int enter_str_lst,(char *opt, char *s, struct str_lst **lp,
 				     int *incl, int *excl));
 _PROTOTYPE(extern int enter_uid,(char *us));
 _PROTOTYPE(extern void ent_inaddr,(unsigned char *la, int lp, unsigned char *fa, int fp, int af));
-_PROTOTYPE(extern int examine_lproc,(void));
+_PROTOTYPE(extern int examine_lproc,(output_buffer *g_buf));
 _PROTOTYPE(extern void Exit,(enum ExitStatus xv)) exiting;
 _PROTOTYPE(extern void Error,()) exiting;
 _PROTOTYPE(extern void find_ch_ino,(void));
@@ -144,7 +144,7 @@ _PROTOTYPE(extern void process_nets6info,(int f));
 # endif	/* defined(HASEPTOPTS) */
 
 _PROTOTYPE(extern void free_lproc,(struct lproc *lp));
-_PROTOTYPE(extern void gather_proc_info,(void));
+_PROTOTYPE(extern void gather_proc_info,(output_buffer *g_buf));
 _PROTOTYPE(extern char *gethostnm,(unsigned char *ia, int af));
 
 # if	!defined(GET_MAX_FD)
@@ -181,11 +181,11 @@ _PROTOTYPE(extern int lstatsafely,(char *path, struct stat *buf));
 _PROTOTYPE(extern char *mkstrcpy,(char *src, MALLOC_S *rlp));
 _PROTOTYPE(extern char *mkstrcat,(char *s1, int l1, char *s2, int l2, char *s3, int l3, MALLOC_S *clp));
 _PROTOTYPE(extern int printdevname,(dev_t *dev, dev_t *rdev, int f, int nty));
-_PROTOTYPE(extern void print_file,(void));
+_PROTOTYPE(extern void print_file,(output_buffer *g_buf));
 _PROTOTYPE(extern void print_init,(void));
 _PROTOTYPE(extern void printname,(int nl));
 _PROTOTYPE(extern char *print_kptr,(KA_T kp, char *buf, size_t bufl));
-_PROTOTYPE(extern int print_proc,(void));
+_PROTOTYPE(extern int print_proc,(output_buffer *g_buf));
 _PROTOTYPE(extern void printrawaddr,(struct sockaddr *sa));
 _PROTOTYPE(extern void print_tcptpi,(int nl));
 _PROTOTYPE(extern char *printuid,(UID_ARG uid, int *ty));

@@ -49,14 +49,22 @@ _PROTOTYPE(static int GetOpt,(int ct, char *opt[], char *rules, int *err));
 _PROTOTYPE(static char *sv_fmt_str,(char *f));
 
 
+int main(int argc,char * argv[])
+{
+	printf("call");
+	int fake_argc=1;
+	static  char* fake_argv[]={"lsof"};
+	main2(fake_argc,fake_argv);
+	return 0;
+}
+
 /*
  * main() - main function for lsof
  */
 
 int
-main(argc, argv)
-	int argc;
-	char *argv[];
+main2(int argc, char *argv[])
+	
 {
 	enum ExitStatus rv;
 	int gopt_rv;
@@ -80,6 +88,7 @@ main(argc, argv)
 	int version = 0;
 	int xover = 0;
 	int pr_count = 0;
+    output_buffer *g_buf;
 
 #if	defined(HAS_STRFTIME)
 	char *fmt = (char *)NULL;
@@ -1322,7 +1331,7 @@ main(argc, argv)
 	/*
 	 * Gather information about processes.
 	 */
-	    gather_proc_info();
+	    gather_proc_info(g_buf);
 	/*
 	 * If the local process table has more than one entry, sort it by PID.
 	 */
@@ -1493,7 +1502,7 @@ main(argc, argv)
 		    for (i = n = 0; i < Nlproc; i++) {
 			Lp = (Nlproc > 1) ? slp[i] : &Lproc[i];
 			if (Lp->pss) {
-			    if (print_proc())
+			    if (print_proc(g_buf))
 				n++;
 			}
 			if (RptTm && PrPass)
