@@ -17,6 +17,9 @@ void init_output_buffer(output_buffer *buf){
 }
 
 void append_buffer(output_buffer *buf, const char* fmt, ...){
+
+	   if(!buf || !buf->data) return;
+
         va_list args;
 
         while (1) {
@@ -35,6 +38,10 @@ void append_buffer(output_buffer *buf, const char* fmt, ...){
                // Reallocate
                 buf->cap *= 2;
                 buf->data = realloc(buf->data, buf->cap);
+			    if(!buf->data){
+                 perror("realloc failed");
+                 exit(1);
+				}
     }
 
 }

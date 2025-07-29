@@ -89,7 +89,8 @@ main2(int argc, char *argv[])
 	int xover = 0;
 	int pr_count = 0;
     output_buffer *g_buf;
-
+    init_output_buffer(g_buf);
+	
 #if	defined(HAS_STRFTIME)
 	char *fmt = (char *)NULL;
 	size_t fmtl = (size_t)0;
