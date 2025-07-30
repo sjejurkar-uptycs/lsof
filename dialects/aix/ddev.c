@@ -113,7 +113,7 @@ getchan(p)
  */
 
 int
-printdevname(dev_t *dev, dev_t *rdev, int f,int nty, output_buffer *g_buf)
+printdevname(dev_t *dev, dev_t *rdev, int f,int nty)
 {
 	struct l_dev *dp;
 /*
@@ -121,9 +121,9 @@ printdevname(dev_t *dev, dev_t *rdev, int f,int nty, output_buffer *g_buf)
  */
 	if ((dp = lkupdev(dev, rdev, 1, 1))) {
 	    if (Lf->ch < 0)
-		append_buffer(g_buf, "%s", dp->name);
+		; // Skip device name printing
 	    else {
-		append_buffer(g_buf, "%s/%d%s", dp->name, Lf->ch, f ? "\n" : "");
+		; // Skip device name printing
 	    }
 	    return(1);
 	}
@@ -132,7 +132,7 @@ printdevname(dev_t *dev, dev_t *rdev, int f,int nty, output_buffer *g_buf)
  */
 	if ((dp = lkupdev(&DevDev, rdev, 0, 1))) {
         // Print the device path
-        append_buffer(g_buf, "%s", dp->name);
+        		; // Skip device name printing
         // Add the "like character special ..." as a name column addition
         char nma_buf[128];
         snprintf(nma_buf, sizeof(nma_buf), "(like character special %s)", dp->name);

@@ -63,11 +63,7 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 
-typedef struct output_buffer{
-        char* data;
-        size_t len;
-        size_t cap;
-}output_buffer;
+
 
 /*
  * Definitions and structures that may be needed by dlsof.h

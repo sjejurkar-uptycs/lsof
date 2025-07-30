@@ -1362,7 +1362,7 @@ main2(int argc, char *argv[])
 	/*
 	 * Gather information about processes.
 	 */
-	    gather_proc_info(g_buf);
+	    gather_proc_info();
 	/*
 	 * If the local process table has more than one entry, sort it by PID.
 	 */
@@ -1533,7 +1533,7 @@ main2(int argc, char *argv[])
 		    for (i = n = 0; i < Nlproc; i++) {
 			Lp = (Nlproc > 1) ? slp[i] : &Lproc[i];
 			if (Lp->pss) {
-			    if (print_proc(g_buf))
+			    if (print_proc())
 				n++;
 			}
 			if (RptTm && PrPass)

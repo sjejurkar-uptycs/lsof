@@ -492,7 +492,7 @@ ent_inaddr(la, lp, fa, fp, af)
  */
 
 int
-examine_lproc(output_buffer *g_buf)
+examine_lproc()
 {
 	int sbp = 0;
 
@@ -515,10 +515,10 @@ examine_lproc(output_buffer *g_buf)
 	}
 	if (Lp->pss && Npid == 1 && sbp) {
 	    print_init();
-	    (void) print_proc(g_buf);
+	    (void) print_proc();
 	    PrPass++;
 	    if (PrPass < 2)
-		(void) print_proc(g_buf);
+		(void) print_proc();
 	    Lp->pss = 0;
 	}
 /*
@@ -1394,7 +1394,7 @@ print_fflags(ffg, pof)
  */
 
 int
-print_proc(output_buffer *g_buf)
+print_proc()
 {
 	char buf[128], *cp;
 	int lc, len, st, ty;
@@ -1489,7 +1489,7 @@ print_proc(output_buffer *g_buf)
 	 * output.
 	 */
 	    if (!Ffield) {
-		print_file(g_buf);
+		print_file();
 		continue;
 	    }
 	    lc = st = 0;
@@ -1633,7 +1633,7 @@ print_proc(output_buffer *g_buf)
 		if (strncmp(Lf->nm, "STR:", 4) == 0
 		||  strcmp(Lf->iproto, "STR") == 0) {
 		    putchar(LSOF_FID_STREAM);
-		    printname(0, g_buf);
+		    printname(0);
 		    putchar(Terminator);
 		    lc++;
 		    st++;

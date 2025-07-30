@@ -65,7 +65,7 @@ _PROTOTYPE(static void update_portmap,(struct porttab *pt, char *pn));
 _PROTOTYPE(static void fill_porttab,(void));
 _PROTOTYPE(static char *lkup_port,(int p, int pr, int src));
 _PROTOTYPE(static char *lkup_svcnam,(int h, int p, int pr, int ss));
-_PROTOTYPE(static int printinaddr,(output_buffer *g_buf));
+_PROTOTYPE(static int printinaddr,(void));
 _PROTOTYPE(static int human_readable_size,(SZOFFTYPE sz, int print, int col));
 
 
@@ -633,7 +633,7 @@ lkup_svcnam(h, p, pr, ss)
 
 
 /*
- * print_file(output_buffer* g_buf) - print file
+ * print_file() - print file
  */
 
 void
@@ -738,8 +738,7 @@ print_file()
 	    (void) snpf(buf, sizeof(buf), "%d", Lp->pid);
 	    if ((len = strlen(buf)) > PidColW)
 		PidColW = len;
-	} else
-	    append_buffer(g_buf," %*d", PidColW, Lp->pid);
+	} 
 
 #if	defined(HASTASKS)
 /*
@@ -762,14 +761,9 @@ print_file()
 	    }
 	} else {
 	    if (TaskPrtTid) {
-		if (Lp->tid)
-		    append_buffer(g_buf," %*d", TaskTidColW, Lp->tid);
-		else
-		    append_buffer(g_buf," %*s", TaskTidColW, "");
-	    }
+		
 	    if (TaskPrtCmd) {
 		cp = Lp->tcmd ? Lp->tcmd : "";
-		append_buffer(g_buf, " %-*.*s", TaskCmdColW, TaskCmdColW, cp);
 	    }
 	}
 #endif	/* defined(HASTASKS) */
@@ -784,8 +778,7 @@ print_file()
 		    if ((len = strlen(Lp->zn)) > ZoneColW)
 			ZoneColW = len;
 		}
-	    } else
-		append_buffer(g_buf," %-*s", ZoneColW, Lp->zn ? Lp->zn : "");
+	    } 
 	}
 #endif	/* defined(HASZONES) */
 
@@ -799,8 +792,7 @@ print_file()
 		    if ((len = strlen(Lp->cntx)) > CntxColW)
 			CntxColW = len;
 		}
-	    } else
-		append_buffer(g_buf," %-*s", CntxColW, Lp->cntx ? Lp->cntx : "");
+	    }
 	}
 #endif	/* defined(HASSELINUX) */
 
@@ -814,8 +806,7 @@ print_file()
 		(void) snpf(buf, sizeof(buf), "%d", Lp->ppid);
 		if ((len = strlen(buf)) > PpidColW)
 		    PpidColW = len;
-	    } else
-		append_buffer(g_buf," %*d", PpidColW, Lp->ppid);
+	    }
 	}
 #endif	/* defined(HASPPID) */
 
@@ -828,8 +819,7 @@ print_file()
 		(void) snpf(buf, sizeof(buf), "%d", Lp->pgid);
 		if ((len = strlen(buf)) > PgidColW)
 		    PgidColW = len;
-	    } else
-		append_buffer(g_buf," %*d", PgidColW, Lp->pgid);
+	    }
 	}
 /*
  * Size or print the user ID or login name.
@@ -837,9 +827,7 @@ print_file()
 	if (!PrPass) {
 	    if ((len = strlen(printuid((UID_ARG)Lp->uid, NULL))) > UserColW)
 		UserColW = len;
-	} else
-	    append_buffer(g_buf," %*.*s", UserColW, UserColW,
-		printuid((UID_ARG)Lp->uid, NULL));
+	}
 /*
  * Size or print the file descriptor, access mode and lock status.
  */
@@ -852,20 +840,14 @@ print_file()
 		Lf->lock);
 	    if ((len = strlen(buf)) > FdColW)
 		FdColW = len;
-	} else
-	    append_buffer(g_buf," %*.*s%c%c", FdColW - 2, FdColW - 2, Lf->fd,
-		(Lf->lock == ' ') ? Lf->access
-				  : (Lf->access == ' ') ? '-'
-							: Lf->access,
-		Lf->lock);
+	}
 /*
  * Size or print the type.
  */
 	if (!PrPass) {
 	    if ((len = strlen(Lf->type)) > TypeColW)
 		TypeColW = len;
-	} else
-	    append_buffer(g_buf," %*.*s", TypeColW, TypeColW, Lf->type);
+	}
 
 #if	defined(HASFSTRUCT)
 /*
@@ -882,8 +864,7 @@ print_file()
 		if (!PrPass) {
 		    if ((len = strlen(cp)) > FsColW)
 			FsColW = len;
-		} else
-		    append_buffer(g_buf," %*.*s", FsColW, FsColW, cp);
+		} 
 
 	    }
 # endif	/* !defined(HASNOFSADDR) */
@@ -898,8 +879,7 @@ print_file()
 		if (!PrPass) {
 		    if ((len = strlen(cp)) > FcColW)
 			FcColW = len;
-		} else
-		    append_buffer(g_buf," %*.*s", FcColW, FcColW, cp);
+		}
 	    }
 # endif	/* !defined(HASNOFSCOUNT) */
 
@@ -912,8 +892,7 @@ print_file()
 		if (!PrPass) {
 		    if ((len = strlen(cp)) > FgColW)
 			FgColW = len;
-		} else
-		    append_buffer(g_buf," %*.*s", FgColW, FgColW, cp);
+		}
 	    }
 # endif	/* !defined(HASNOFSFLAGS) */
 
@@ -924,8 +903,7 @@ print_file()
 		if (!PrPass) {
 		    if ((len = strlen(cp)) > NiColW)
 			NiColW = len;
-		} else
-		    append_buffer(g_buf," %*.*s", NiColW, NiColW, cp);
+		}
 	    }
 # endif	/* !defined(HASNOFSNADDR) */
 
@@ -965,15 +943,6 @@ print_file()
 		len = 0;
 	    if (len > DevColW)
 		DevColW = len;
-	} else {
-	    if (devs)
-		append_buffer(g_buf," %*.*s", DevColW, DevColW, cp);
-	    else {
-		if (Lf->dev_ch)
-		    append_buffer(g_buf," %*.*s", DevColW, DevColW, Lf->dev_ch);
-		else
-		    append_buffer(g_buf," %*.*s", DevColW, DevColW, "");
-	    }
 	}
 /*
  * Size or print the size or offset.
@@ -1012,14 +981,12 @@ print_file()
 	    if (len > SzOffColW)
 		SzOffColW = len;
 	} else {
-	    append_buffer(g_buf, " ");
 	    if (Lf->sz_def) {
 		if (Fhuman) {
 		    human_readable_size(Lf->sz, 1, SzOffColW);
 		} else {
 		    (void) snpf(buf, sizeof(buf), SzOffFmt_d, Lf->sz);
 		    len = strlen(buf);
-		    append_buffer(g_buf,SzOffFmt_dv, SzOffColW, Lf->sz);
 		}
 	    }
 	    else if (Lf->off_def) {
@@ -1041,9 +1008,8 @@ print_file()
 #endif	/* defined(HASPRINTOFF) */
 
 		}
-		append_buffer(g_buf,"%*.*s", SzOffColW, SzOffColW, cp);
-	    } else
-		append_buffer(g_buf,"%*.*s", SzOffColW, SzOffColW, "");
+		; // Skip size/offset printing
+	    }
 	}
 /*
  * Size or print the link count.
@@ -1057,8 +1023,7 @@ print_file()
 	    if (!PrPass) {
 		if ((len = strlen(cp)) > NlColW)
 		    NlColW = len;
-	    } else
-		append_buffer(g_buf," %*s", NlColW, cp);
+	    }
 	}
 /*
  * Size or print the inode information.
@@ -1090,15 +1055,12 @@ print_file()
 	if (!PrPass) {
 	    if ((len = strlen(cp)) > NodeColW)
 		NodeColW = len;
-	} else {
-	    append_buffer(g_buf," %*.*s", NodeColW, NodeColW, cp);
 	}
 /*
  * If this is the second pass, print the name column.  (It doesn't need
  * to be sized.)
  */
 	if (PrPass) {
-	    append_buffer(g_buf, " ");
 
 #if	defined(HASPRINTNM)
 	    HASPRINTNM(Lf);

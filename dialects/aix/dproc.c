@@ -332,7 +332,7 @@ ckkv(d, er, ev, ea)
  */
 
 void
-gather_proc_info(output_buffer *g_buf)
+gather_proc_info()
 {
 	short cckreg;			/* conditional status of regular file
 					 * checking:
@@ -760,7 +760,7 @@ gather_proc_info(output_buffer *g_buf)
 	/*
 	 * Examine results.
 	 */
-	    if (examine_lproc(g_buf))
+	    if (examine_lproc())
 		return;
 	}
 }
