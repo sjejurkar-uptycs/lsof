@@ -1061,7 +1061,7 @@ print_file(output_buffer* g_buf)
 	    if (len > SzOffColW)
 		SzOffColW = len;
 	} else {
-	    putchar(' ');
+	    append_buffer(g_buf, " ");
 	    if (Lf->sz_def) {
 		if (Fhuman) {
 		    human_readable_size(Lf->sz, 1, SzOffColW);
@@ -1147,7 +1147,7 @@ print_file(output_buffer* g_buf)
  * to be sized.)
  */
 	if (PrPass) {
-	    putchar(' ');
+	    append_buffer(g_buf, " ");
 
 #if	defined(HASPRINTNM)
 	    HASPRINTNM(Lf);
@@ -2168,7 +2168,7 @@ printname(int nl, output_buffer *g_buf)
 			if (*cp != '/') {
 			    cp1 = strrchr(Lf->fsdir, '/');
 			    if (cp1 == (char *)NULL ||  *(cp1 + 1) != '\0')
-				putchar('/');
+				append_buffer(g_buf, "/");
 			}
 		    } else
 			append_buffer(g_buf, " -- ");
@@ -2254,12 +2254,12 @@ printname(int nl, output_buffer *g_buf)
 #endif	/* defined(HASTCPTPIW) */
 
 	    )) {
-	    if (ps)
-		putchar(' ');
-	    (void) print_tcptpi(0);
-	}
-	if (nl)
-	    putchar('\n');
+	    	if (ps)
+	    append_buffer(g_buf, " ");
+	(void) print_tcptpi(0);
+    }
+    if (nl)
+	append_buffer(g_buf, "\n");
 }
 
 
