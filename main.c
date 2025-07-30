@@ -60,7 +60,9 @@ int main(int argc,char * argv[])
 	
 	// Now print the collected structured data
 	lsof_result_t* result = get_lsof_result();
+	printf("DEBUG: get_lsof_result() returned: %p\n", (void*)result);
 	if (result) {
+		printf("DEBUG: result->count = %d\n", result->count);
 		printf("\n=== STRUCTURED LSOF RESULTS ===\n");
 		printf("Total entries collected: %d\n\n", result->count);
 		

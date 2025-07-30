@@ -494,6 +494,7 @@ ent_inaddr(la, lp, fa, fp, af)
 int
 examine_lproc()
 {
+	printf("DEBUG: examine_lproc() called\n");
 	int sbp = 0;
 
 	if (RptTm)
@@ -1396,6 +1397,7 @@ print_fflags(ffg, pof)
 int
 print_proc()
 {
+	printf("DEBUG: print_proc() called\n");
 	char buf[128], *cp;
 	int lc, len, st, ty;
 	int rv = 0;
