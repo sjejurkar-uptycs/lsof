@@ -32,7 +32,7 @@
  */
 
 #include "lsof.h"
-
+#include "lsof_structured.h"
 
 /*
  * Local definitions

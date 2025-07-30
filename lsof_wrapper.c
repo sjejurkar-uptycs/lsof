@@ -1,5 +1,6 @@
 #include "lsof.h"
 #include "proto.h"
+#include "lsof_structured.h"
 #include <string.h>
 #include <stdlib.h>
 

@@ -6,6 +6,8 @@
 #include <stdarg.h>
 #include <arpa/inet.h>
 
+#include "lsof_structured.h"
+
 
 /*
  * Local definitions, structures and function prototypes

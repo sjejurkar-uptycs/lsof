@@ -2,11 +2,11 @@
  * proto.h - common function prototypes for lsof
  */
 
-#include "lsof.h"
-
 
 #if	!defined(PROTO_H)
 #define	PROTO_H	1
+
+
 
 
 /*
@@ -295,15 +295,5 @@ _PROTOTYPE(extern int readvnode,(KA_T va, struct vnode *v));
 # if	defined(USE_LIB_SNPF)
 _PROTOTYPE(extern int snpf,(char *str, int len, char *fmt, ...));
 # endif	/* defined(USE_LIB_SNPF) */
-
-/*
- * Structured result functions
- */
-_PROTOTYPE(extern void init_lsof_result,(void));
-_PROTOTYPE(extern void add_lsof_entry,(const char *command, int pid, const char *user, 
-                                      const char *fd, const char *type, const char *device,
-                                      const char *size_off, const char *node, const char *name));
-_PROTOTYPE(extern void free_lsof_result,(void));
-_PROTOTYPE(extern lsof_result_t* get_lsof_result,(void));
 
 # endif	/* !defined(PROTO_H) */
