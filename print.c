@@ -2059,8 +2059,8 @@ printname(int nl, output_buffer *g_buf)
 
 	int ps = 0;
 
-	// Only output to buffer during the second pass (PrPass is true)
-	if (!PrPass) {
+	// Only output to buffer during the second pass (PrPass is true) and not in field mode
+	if (!PrPass || Ffield) {
 	    return;
 	}
 
