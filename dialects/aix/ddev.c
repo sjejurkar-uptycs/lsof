@@ -145,7 +145,7 @@ printdevname(dev_t *dev, dev_t *rdev, int f,int nty, output_buffer *g_buf)
 		    Pn, ttl, dp->name);
 		Error();
 	    }
-        append_buffer(g_buf," (%s %s)", dp->name, ttl);
+        append_buffer(g_buf," (%s %s)", ttl, dp->name);
 	    (void) add_nma(cp, len);
 	    (void) free((MALLOC_P *)cp);
 	    return(0);
