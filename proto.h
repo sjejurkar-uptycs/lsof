@@ -189,6 +189,7 @@ _PROTOTYPE(extern char *print_kptr,(KA_T kp, char *buf, size_t bufl));
 _PROTOTYPE(extern int print_proc,(output_buffer *g_buf));
 _PROTOTYPE(extern void printrawaddr,(struct sockaddr *sa));
 _PROTOTYPE(extern void print_tcptpi,(int nl));
+_PROTOTYPE(extern void print_tcptpi_buf,(int nl, output_buffer *g_buf));
 _PROTOTYPE(extern char *printuid,(UID_ARG uid, int *ty));
 _PROTOTYPE(extern void printunkaf,(int fam, int ty));
 _PROTOTYPE(extern char *printsockty,(int ty));

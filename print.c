@@ -2256,7 +2256,7 @@ printname(int nl, output_buffer *g_buf)
 	    )) {
 	    	if (ps)
 	    append_buffer(g_buf, " ");
-	(void) print_tcptpi(0);
+	(void) print_tcptpi_buf(0, g_buf);
     }
     if (nl)
 	append_buffer(g_buf, "\n");

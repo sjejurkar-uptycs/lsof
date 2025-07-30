@@ -64,24 +64,25 @@ void
 print_tcptpi(nl)
 	int nl;				/* 1 == '\n' required */
 {
+	print_tcptpi_buf(nl, NULL);
+}
+
+/*
+ * print_tcptpi_buf() - print TCP/TPI info to buffer
+ */
+
+void
+print_tcptpi_buf(nl, g_buf)
+	int nl;				/* 1 == '\n' required */
+	output_buffer *g_buf;		/* output buffer */
+{
+	// For now, skip TCP state printing when using buffer to avoid scattered output
+	if (g_buf) {
+	    return;
+	}
+	
 	int ps = 0;
 	int s;
-
-	if ((Ftcptpi & TCPTPI_STATE) && Lf->lts.type == 0) {
-	    if (Ffield)
-		(void) printf("%cST=", LSOF_FID_TCPTPI);
-	    else
-		putchar('(');
-	    if (!TcpNstates)
-		(void) build_IPstates();
-	    if ((s = Lf->lts.state.i) < 0 || s >= TcpNstates)
-		(void) printf("UNKNOWN_TCP_STATE_%d", s);
-	    else
-		(void) fputs(TcpSt[s], stdout);
-	    ps++;
-	    if (Ffield)
-		putchar(Terminator);
-	}
 
 #if	defined(HASTCPTPIQ)
 	if (Ftcptpi & TCPTPI_QUEUES) {
