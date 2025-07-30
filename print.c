@@ -8,6 +8,8 @@
 
 #include "lsof_structured.h"
 
+// Global structured result pointer
+lsof_result_t* g_result = NULL;
 
 /*
  * Local definitions, structures and function prototypes
@@ -2873,9 +2875,9 @@ int human_readable_size(SZOFFTYPE sz, int print, int col)
 	return strlen(buf);
 }
 
-// Global structured result
-lsof_result_t* g_result = NULL;
-
+/*
+ * init_lsof_result() - initialize the lsof result
+ */
 void init_lsof_result() {
     g_result = (lsof_result_t*)malloc(sizeof(lsof_result_t));
     if (!g_result) {
