@@ -885,7 +885,6 @@ usage(err, fh, version)
 	 */
 	    (void) fprintf(stderr, "%s version information:\n", Pn);
 	    (void) fprintf(stderr, "    revision: %s\n", LSOF_VERSION);
-	    (void) fprintf(stderr, "    copyright notice: %s\n", copyright);
 	    (void) fprintf(stderr, "    latest revision: %s\n", LSOF_REPO_URL);
 	    (void) fprintf(stderr, "    latest FAQ: %s\n",
 		LSOF_FAQ_URL);
