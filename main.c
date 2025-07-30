@@ -122,6 +122,7 @@ main2(int argc, char *argv[])
      * Initialize the structured result
      */
     init_lsof_result();
+    printf("DEBUG: init_lsof_result() called in main2()\n");
 
 #if	defined(HAS_STRFTIME)
 	char *fmt = (char *)NULL;
@@ -1880,6 +1881,35 @@ main2(int argc, char *argv[])
 			(unsigned long)Suid[i].uid);
 	    }
 	}
+	/*
+	 * Display the collected structured data
+	 */
+	lsof_result_t* result = get_lsof_result();
+	printf("DEBUG: get_lsof_result() returned: %p\n", (void*)result);
+	if (result) {
+		printf("DEBUG: result->count = %d\n", result->count);
+		printf("\n=== STRUCTURED LSOF RESULTS ===\n");
+		printf("Total entries collected: %d\n\n", result->count);
+		
+		// Print all entries
+		for (int i = 0; i < result->count; i++) {
+			lsof_entry_t* entry = &result->entries[i];
+			printf("Entry %d:\n", i);
+			printf("  Command: %s\n", entry->command);
+			printf("  PID: %d\n", entry->pid);
+			printf("  User: %s\n", entry->user);
+			printf("  FD: %s\n", entry->fd);
+			printf("  Type: %s\n", entry->type);
+			printf("  Device: %s\n", entry->device);
+			printf("  Size/Off: %s\n", entry->size_off);
+			printf("  Node: %s\n", entry->node);
+			printf("  Name: %s\n", entry->name);
+			printf("\n");
+		}
+	} else {
+		printf("No structured data collected.\n");
+	}
+
 	/*
 	 * Clean up the structured result
 	 */
