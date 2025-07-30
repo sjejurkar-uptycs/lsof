@@ -110,7 +110,7 @@ _PROTOTYPE(static void update_portmap,(struct porttab *pt, char *pn));
 _PROTOTYPE(static void fill_porttab,(void));
 _PROTOTYPE(static char *lkup_port,(int p, int pr, int src));
 _PROTOTYPE(static char *lkup_svcnam,(int h, int p, int pr, int ss));
-_PROTOTYPE(static int printinaddr,(void));
+_PROTOTYPE(static int printinaddr,(output_buffer *g_buf));
 _PROTOTYPE(static int human_readable_size,(SZOFFTYPE sz, int print, int col));
 
 
@@ -1164,7 +1164,7 @@ print_file(output_buffer* g_buf)
  */
 
 static int
-printinaddr()
+printinaddr(output_buffer *g_buf)
 {
 	int i, len, src;
 	char *host, *port;
@@ -1306,7 +1306,11 @@ printinaddr()
 	    }
 	}
 	if (Namech[0]) {
-	    safestrprt(Namech, stdout, 0);
+	    if (g_buf) {
+		append_buffer(g_buf, "%s", Namech);
+	    } else {
+		safestrprt(Namech, stdout, 0);
+	    }
 	    return(1);
 	}
 	return(0);
@@ -2080,7 +2084,7 @@ printname(int nl, output_buffer *g_buf)
 	/*
 	 * If the file has Internet addresses, print them.
 	 */
-	    if (printinaddr())
+	    if (printinaddr(g_buf))
 		ps++;
 	    goto print_nma;
 	}
