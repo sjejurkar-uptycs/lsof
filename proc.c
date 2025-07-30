@@ -1633,7 +1633,7 @@ print_proc(output_buffer *g_buf)
 		if (strncmp(Lf->nm, "STR:", 4) == 0
 		||  strcmp(Lf->iproto, "STR") == 0) {
 		    putchar(LSOF_FID_STREAM);
-		    printname(0);
+		    printname(0, g_buf);
 		    putchar(Terminator);
 		    lc++;
 		    st++;
@@ -1641,7 +1641,7 @@ print_proc(output_buffer *g_buf)
 	    }
 	    if (st == 0 && FieldSel[LSOF_FIX_NAME].st) {
 		putchar(LSOF_FID_NAME);
-		printname(0);
+		printname(0, g_buf);
 		putchar(Terminator);
 		lc++;
 	    }

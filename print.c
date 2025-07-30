@@ -1144,7 +1144,7 @@ print_file(output_buffer* g_buf)
 #if	defined(HASPRINTNM)
 	    HASPRINTNM(Lf);
 #else	/* !defined(HASPRINTNM) */
-	    printname(1);
+	    printname(1,g_buf);
 #endif	/* defined(HASPRINTNM) */
 
 	}
@@ -2040,7 +2040,7 @@ printiproto(p)
  */
 
 void
-printname(nl)
+printname(nl, output_buffer *g_buf)
 	int nl;				/* NL status */
 {
 
@@ -2074,7 +2074,7 @@ printname(nl)
 	}
 	if (((Lf->ntype == N_BLK) || (Lf->ntype == N_CHR))
 	&&  Lf->dev_def && Lf->rdev_def
-	&&  printdevname(&Lf->dev, &Lf->rdev, 0, Lf->ntype))
+	&&  printdevname(&Lf->dev, &Lf->rdev, 0, Lf->ntype, g_buf))
 	{
 
 	/*

@@ -113,11 +113,7 @@ getchan(p)
  */
 
 int
-printdevname(dev, rdev, f, nty)
-	dev_t *dev;			/* device */
-	dev_t *rdev;			/* raw device */
-	int f;				/* 1 = follow with '\n' */
-	int nty;			/* node type: N_BLK or N_CHR */
+printdevname(dev_t *dev, dev_t *rdev, f, int f,int nty, output_buffer *g_buf)
 {
 	struct l_dev *dp;
 /*
@@ -150,7 +146,7 @@ printdevname(dev, rdev, f, nty)
 		    Pn, ttl, dp->name);
 		Error();
 	    }
-	    (void) snpf(cp, len + 1, "(%s %s)", ttl, dp->name);
+        append_buffer(g_buf,"(%s %s)", ttl, dp->name);
 	    (void) add_nma(cp, len);
 	    (void) free((MALLOC_P *)cp);
 	    return(0);
