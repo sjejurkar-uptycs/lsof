@@ -1085,7 +1085,11 @@ print_file()
 	        char name_buf[1024];
 	        
 	        // Extract command directly from Lp->cmd
-	        strncpy(command_buf, Lp->cmd ? Lp->cmd : "(unknown)", sizeof(command_buf) - 1);
+	        if (Lp->cmd && Lp->cmd[0]) {
+	            strncpy(command_buf, Lp->cmd, sizeof(command_buf) - 1);
+	        } else {
+	            strncpy(command_buf, "(unknown)", sizeof(command_buf) - 1);
+	        }
 	        command_buf[sizeof(command_buf) - 1] = '\0';
 	        
 	        // Extract user directly from Lp->uid
@@ -1130,6 +1134,19 @@ print_file()
 	        // Add the main name if it exists
 	        if (Lf->nm && Lf->nm[0]) {
 	            strncat(name_buf, Lf->nm, sizeof(name_buf) - 1);
+	        }
+	        
+	        // Add file system directory if it exists
+	        if (Lf->fsdir && Lf->fsdir[0]) {
+	            if (name_buf[0]) strncat(name_buf, " ", sizeof(name_buf) - strlen(name_buf) - 1);
+	            strncat(name_buf, Lf->fsdir, sizeof(name_buf) - strlen(name_buf) - 1);
+	        }
+	        
+	        // Add file system device if it exists
+	        if (Lf->fsdev && Lf->fsdev[0]) {
+	            if (name_buf[0]) strncat(name_buf, " (", sizeof(name_buf) - strlen(name_buf) - 1);
+	            strncat(name_buf, Lf->fsdev, sizeof(name_buf) - strlen(name_buf) - 1);
+	            strncat(name_buf, ")", sizeof(name_buf) - strlen(name_buf) - 1);
 	        }
 	        
 	        // Add network addresses if they exist
