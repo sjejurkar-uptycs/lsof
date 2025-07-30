@@ -113,7 +113,7 @@ getchan(p)
  */
 
 int
-printdevname(dev_t *dev, dev_t *rdev, f, int f,int nty, output_buffer *g_buf)
+printdevname(dev_t *dev, dev_t *rdev, int f,int nty, output_buffer *g_buf)
 {
 	struct l_dev *dp;
 /*
