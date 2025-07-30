@@ -76,46 +76,15 @@ print_tcptpi_buf(nl, g_buf)
 	int nl;				/* 1 == '\n' required */
 	output_buffer *g_buf;		/* output buffer */
 {
-	// For now, skip TCP state printing when using buffer to avoid scattered output
+	// Skip TCP state printing when using buffer to avoid scattered output
+	// This can be re-enabled later if needed
 	if (g_buf) {
 	    return;
 	}
 	
+	// Original function logic for non-buffer mode
 	int ps = 0;
 	int s;
-
-#if	defined(HASTCPTPIQ)
-	if (Ftcptpi & TCPTPI_QUEUES) {
-	    if (Lf->lts.rqs) {
-		if (Ffield)
-		    putchar(LSOF_FID_TCPTPI);
-		else {
-		    if (ps)
-			putchar(' ');
-		    else
-			putchar('(');
-		}
-		(void) printf("QR=%lu", Lf->lts.rq);
-		if (Ffield)
-		    putchar(Terminator);
-		ps++;
-	    }
-	    if (Lf->lts.sqs) {
-		if (Ffield)
-		    putchar(LSOF_FID_TCPTPI);
-		else {
-		    if (ps)
-			putchar(' ');
-		    else
-			putchar('(');
-		}
-		(void) printf("QS=%lu", Lf->lts.sq);
-		if (Ffield)
-		    putchar(Terminator);
-		ps++;
-	    }
-	}
-#endif	/* defined(HASTCPTPIQ) */
 
 #if	defined(HASSOOPT)
 	if (Ftcptpi & TCPTPI_FLAGS) {
