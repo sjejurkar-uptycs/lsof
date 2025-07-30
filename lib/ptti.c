@@ -64,7 +64,7 @@ void
 print_tcptpi(nl)
 	int nl;				/* 1 == '\n' required */
 {
-	print_tcptpi_buf(nl, NULL);
+	print_tcptpi_buf(nl);
 }
 
 /*
