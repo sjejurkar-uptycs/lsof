@@ -89,6 +89,11 @@ main2(int argc, char *argv[])
 	int xover = 0;
 	int pr_count = 0;
     output_buffer *g_buf;
+    g_buf = (output_buffer *)malloc(sizeof(output_buffer));
+    if (!g_buf) {
+        (void) fprintf(stderr, "%s: no space for output buffer\n", Pn);
+        Error();
+    }
     init_output_buffer(g_buf);
 
 #if	defined(HAS_STRFTIME)
@@ -1850,6 +1855,10 @@ main2(int argc, char *argv[])
 	}
 	printf("\nI am printing the buffer\n");
 	printf("%s", g_buf->data);
+
+	// Clean up the output buffer
+	free_output_buffer(g_buf);
+	free(g_buf);
 
 	if (!rv && rc)
 	    rv = ev;

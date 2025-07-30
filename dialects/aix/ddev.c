@@ -121,10 +121,9 @@ printdevname(dev_t *dev, dev_t *rdev, int f,int nty, output_buffer *g_buf)
  */
 	if ((dp = lkupdev(dev, rdev, 1, 1))) {
 	    if (Lf->ch < 0)
-		safestrprt(dp->name, stdout, f);
+		append_buffer(g_buf, "%s", dp->name);
 	    else {
-		safestrprt(dp->name, stdout, 0);
-		(void) printf("/%d%s", Lf->ch, f ? "\n" : "");
+		append_buffer(g_buf, "%s/%d%s", dp->name, Lf->ch, f ? "\n" : "");
 	    }
 	    return(1);
 	}

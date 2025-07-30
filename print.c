@@ -16,6 +16,15 @@ void init_output_buffer(output_buffer *buf){
         buf->data[0]='\0';
 }
 
+void free_output_buffer(output_buffer *buf){
+        if(buf && buf->data){
+                free(buf->data);
+                buf->data = NULL;
+                buf->len = 0;
+                buf->cap = 0;
+        }
+}
+
 void append_buffer(output_buffer *buf, const char* fmt, ...){
 
 	   if(!buf || !buf->data) return;
@@ -770,7 +779,7 @@ print_file(output_buffer* g_buf)
 	    if (len > CmdColW)
 		CmdColW = len;
 	} else
-	    safestrprtn(cp, CmdColW, stdout, 2);
+	    append_buffer(g_buf, "%-*.*s", CmdColW, CmdColW, cp);
 /*
  * Size or print the process ID.
  */
@@ -809,8 +818,7 @@ print_file(output_buffer* g_buf)
 	    }
 	    if (TaskPrtCmd) {
 		cp = Lp->tcmd ? Lp->tcmd : "";
-		printf(" ");
-		safestrprtn(cp, TaskCmdColW, stdout, 2);
+		append_buffer(g_buf, " %-*.*s", TaskCmdColW, TaskCmdColW, cp);
 	    }
 	}
 #endif	/* defined(HASTASKS) */
@@ -2056,14 +2064,14 @@ printname(int nl, output_buffer *g_buf)
 	/*
 	 * Print the name characters, if there are some.
 	 */
-	    safestrprt(Lf->nm, stdout, 0);
+	    append_buffer(g_buf, "%s", Lf->nm);
 	    ps++;
 	    if (!Lf->li[0].af && !Lf->li[1].af)
 		goto print_nma;
 	}
 	if (Lf->li[0].af || Lf->li[1].af) {
 	    if (ps)
-		putchar(' ');
+		append_buffer(g_buf, " ");
 	/*
 	 * If the file has Internet addresses, print them.
 	 */
@@ -2087,7 +2095,7 @@ printname(int nl, output_buffer *g_buf)
 	/*
 	 * If this is a common node, print that fact.
 	 */
-	    (void) fputs("COMMON: ", stdout);
+	    append_buffer(g_buf, "COMMON: ");
 	    ps++;
 	    goto print_nma;
 	}
@@ -2128,7 +2136,7 @@ printname(int nl, output_buffer *g_buf)
 
 #if	!defined(HASNCACHE) || HASNCACHE<2
 	    if (Lf->fsdir) {
-		safestrprt(Lf->fsdir, stdout, 0);
+		append_buffer(g_buf, "%s", Lf->fsdir);
 		ps++;
 	    }
 #endif	/* !defined(HASNCACHE) || HASNCACHE<2 */
@@ -2163,8 +2171,8 @@ printname(int nl, output_buffer *g_buf)
 				putchar('/');
 			}
 		    } else
-			(void) fputs(" -- ", stdout);
-		    safestrprt(cp, stdout, 0);
+			append_buffer(g_buf, " -- ");
+		    append_buffer(g_buf, "%s", cp);
 		    ps++;
 		    goto print_nma;
 		}
@@ -2186,23 +2194,23 @@ printname(int nl, output_buffer *g_buf)
 	    }
 	    if ((cp = ncache_lookup(buf, sizeof(buf), &fp))) {
 		if (fp) {
-		    safestrprt(cp, stdout, 0);
+		    append_buffer(g_buf, "%s", cp);
 		    ps++;
 		} else {
 		    if (Lf->fsdir) {
-			safestrprt(Lf->fsdir, stdout, 0);
+			append_buffer(g_buf, "%s", Lf->fsdir);
 			ps++;
 		    }
 		    if (*cp) {
-			(void) fputs(" -- ", stdout);
-			safestrprt(cp, stdout, 0);
+			append_buffer(g_buf, " -- ");
+			append_buffer(g_buf, "%s", cp);
 			ps++;
 		    }
 		}
 		goto print_nma;
 	    }
 	    if (Lf->fsdir) {
-		safestrprt(Lf->fsdir, stdout, 0);
+		append_buffer(g_buf, "%s", Lf->fsdir);
 		ps++;
 	    }
 # endif	/* HASNCACHE<2 */
@@ -2210,11 +2218,11 @@ printname(int nl, output_buffer *g_buf)
 
 	    if (Lf->fsdev) {
 		if (Lf->fsdir)
-		    (void) fputs(" (", stdout);
+		    append_buffer(g_buf, " (");
 		else
-		    (void) putchar('(');
-		safestrprt(Lf->fsdev, stdout, 0);
-		(void) putchar(')');
+		    append_buffer(g_buf, "(");
+		append_buffer(g_buf, "%s", Lf->fsdev);
+		append_buffer(g_buf, ")");
 		ps++;
 	    }
 	}
@@ -2227,8 +2235,8 @@ printname(int nl, output_buffer *g_buf)
 
 	if (Lf->nma) {
 	    if (ps)
-		putchar(' ');
-	    safestrprt(Lf->nma, stdout, 0);
+		append_buffer(g_buf, " ");
+	    append_buffer(g_buf, "%s", Lf->nma);
 	    ps++;
 	}
 /*
