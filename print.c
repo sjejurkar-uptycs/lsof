@@ -641,6 +641,7 @@ lkup_svcnam(h, p, pr, ss)
 void
 print_file()
 {
+	printf("DEBUG: print_file() called\n");
 	char buf[128];
 	char *cp = (char *)NULL;
 	dev_t dev;
@@ -1072,6 +1073,7 @@ print_file()
 
 	    // Add structured entry to the result after printing the complete line
 	    if (PrPass && !Ffield && g_result) {
+	        printf("DEBUG: Collecting structured data for process %d, file %s\n", Lp->pid, Lf->fd);
 	        // Get the current process and file information directly from structured data
 	        char command_buf[256];
 	        char user_buf[64];
