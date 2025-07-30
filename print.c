@@ -2040,8 +2040,7 @@ printiproto(p)
  */
 
 void
-printname(nl, output_buffer *g_buf)
-	int nl;				/* NL status */
+printname(int nl, output_buffer *g_buf)
 {
 
 #if	defined(HASNCACHE)
