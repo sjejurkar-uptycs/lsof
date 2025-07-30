@@ -2059,6 +2059,11 @@ printname(int nl, output_buffer *g_buf)
 
 	int ps = 0;
 
+	// Only output to buffer during the second pass (PrPass is true)
+	if (!PrPass) {
+	    return;
+	}
+
 	if (Lf->nm && Lf->nm[0]) {
 
 	/*
