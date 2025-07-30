@@ -1112,4 +1112,24 @@ extern znhash_t **ZoneArg;
 #include "proto.h"
 #include "dproto.h"
 
+// Struct for file descriptor entries to return to C++ code
+typedef struct {
+    char command[256];
+    int pid;
+    char user[64];
+    char fd[16];
+    char type[16];
+    char device[64];
+    char size_off[64];
+    char node[64];
+    char name[1024];
+} lsof_entry_t;
+
+// Struct to hold the result array
+typedef struct {
+    lsof_entry_t* entries;
+    int count;
+    int capacity;
+} lsof_result_t;
+
 #endif	/* LSOF_H */

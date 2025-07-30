@@ -72,15 +72,9 @@ print_tcptpi(nl)
  */
 
 void
-print_tcptpi_buf(nl, g_buf)
+print_tcptpi_buf(nl)
 	int nl;				/* 1 == '\n' required */
-	output_buffer *g_buf;		/* output buffer */
 {
-	// Skip TCP state printing when using buffer to avoid scattered output
-	// This can be re-enabled later if needed
-	if (g_buf) {
-	    return;
-	}
 	
 	// Original function logic for non-buffer mode
 	int ps = 0;

@@ -131,25 +131,14 @@ printdevname(dev_t *dev, dev_t *rdev, int f,int nty, output_buffer *g_buf)
  * Search device table for a match without inode number and dev.
  */
 	if ((dp = lkupdev(&DevDev, rdev, 0, 1))) {
-
-	/*
-	 * A raw device match was found.  Record it as a name column addition.
-	 */
-	    char *cp, *ttl;
-	    int len;
-
-	    ttl = (nty == N_BLK) ? LIKE_BLK_SPEC : LIKE_CHR_SPEC;
-	    len = (int)(1 + strlen(ttl) + 1 + strlen(dp->name) + 1);
-	    if (!(cp = (char *)malloc((MALLOC_S)(len + 1)))) {
-		(void) fprintf(stderr, "%s: no nma space for: (%s %s)\n",
-		    Pn, ttl, dp->name);
-		Error();
-	    }
-        append_buffer(g_buf," (%s %s)", ttl, dp->name);
-	    (void) add_nma(cp, len);
-	    (void) free((MALLOC_P *)cp);
-	    return(0);
-	}
+        // Print the device path
+        append_buffer(g_buf, "%s", dp->name);
+        // Add the "like character special ..." as a name column addition
+        char nma_buf[128];
+        snprintf(nma_buf, sizeof(nma_buf), "(like character special %s)", dp->name);
+        (void) add_nma(nma_buf, strlen(nma_buf));
+        return 1;
+    }
 	return(0);
 }
 

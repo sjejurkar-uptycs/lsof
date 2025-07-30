@@ -51,10 +51,38 @@ _PROTOTYPE(static char *sv_fmt_str,(char *f));
 
 int main(int argc,char * argv[])
 {
-	printf("call");
-	int fake_argc=1;
-	static  char* fake_argv[]={"lsof"};
-	main2(fake_argc,fake_argv);
+	printf("Running lsof with structured data collection...\n");
+	
+	// Run the actual lsof execution
+	int fake_argc = 1;
+	static char* fake_argv[] = {"lsof"};
+	main2(fake_argc, fake_argv);
+	
+	// Now print the collected structured data
+	lsof_result_t* result = get_lsof_result();
+	if (result) {
+		printf("\n=== STRUCTURED LSOF RESULTS ===\n");
+		printf("Total entries collected: %d\n\n", result->count);
+		
+		// Print all entries
+		for (int i = 0; i < result->count; i++) {
+			lsof_entry_t* entry = &result->entries[i];
+			printf("Entry %d:\n", i);
+			printf("  Command: %s\n", entry->command);
+			printf("  PID: %d\n", entry->pid);
+			printf("  User: %s\n", entry->user);
+			printf("  FD: %s\n", entry->fd);
+			printf("  Type: %s\n", entry->type);
+			printf("  Device: %s\n", entry->device);
+			printf("  Size/Off: %s\n", entry->size_off);
+			printf("  Node: %s\n", entry->node);
+			printf("  Name: %s\n", entry->name);
+			printf("\n");
+		}
+	} else {
+		printf("No structured data collected.\n");
+	}
+	
 	return 0;
 }
 
@@ -88,13 +116,10 @@ main2(int argc, char *argv[])
 	int version = 0;
 	int xover = 0;
 	int pr_count = 0;
-    output_buffer *g_buf;
-    g_buf = (output_buffer *)malloc(sizeof(output_buffer));
-    if (!g_buf) {
-        (void) fprintf(stderr, "%s: no space for output buffer\n", Pn);
-        Error();
-    }
-    init_output_buffer(g_buf);
+    /*
+     * Initialize the structured result
+     */
+    init_lsof_result();
 
 #if	defined(HAS_STRFTIME)
 	char *fmt = (char *)NULL;
@@ -1853,12 +1878,10 @@ main2(int argc, char *argv[])
 			(unsigned long)Suid[i].uid);
 	    }
 	}
-	printf("\nI am printing the buffer\n");
-	printf("%s", g_buf->data);
-
-	// Clean up the output buffer
-	free_output_buffer(g_buf);
-	free(g_buf);
+	/*
+	 * Clean up the structured result
+	 */
+	free_lsof_result();
 
 	if (!rv && rc)
 	    rv = ev;

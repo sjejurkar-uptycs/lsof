@@ -184,12 +184,12 @@ _PROTOTYPE(extern int printdevname,(dev_t *dev, dev_t *rdev, int f, int nty, out
 _PROTOTYPE(extern void print_file,(output_buffer *g_buf));
 _PROTOTYPE(extern void free_output_buffer,(output_buffer *g_buf));
 _PROTOTYPE(extern void print_init,(void));
-_PROTOTYPE(extern void printname,(int nl, output_buffer *g_buf));
+_PROTOTYPE(extern void printname,(int nl));
 _PROTOTYPE(extern char *print_kptr,(KA_T kp, char *buf, size_t bufl));
-_PROTOTYPE(extern int print_proc,(output_buffer *g_buf));
+_PROTOTYPE(extern int print_proc,(void));
 _PROTOTYPE(extern void printrawaddr,(struct sockaddr *sa));
 _PROTOTYPE(extern void print_tcptpi,(int nl));
-_PROTOTYPE(extern void print_tcptpi_buf,(int nl, output_buffer *g_buf));
+_PROTOTYPE(extern void print_tcptpi_buf,(int nl));
 _PROTOTYPE(extern char *printuid,(UID_ARG uid, int *ty));
 _PROTOTYPE(extern void printunkaf,(int fam, int ty));
 _PROTOTYPE(extern char *printsockty,(int ty));
@@ -325,5 +325,15 @@ _PROTOTYPE(extern int readvnode,(KA_T va, struct vnode *v));
 # if	defined(USE_LIB_SNPF)
 _PROTOTYPE(extern int snpf,(char *str, int len, char *fmt, ...));
 # endif	/* defined(USE_LIB_SNPF) */
+
+/*
+ * Structured result functions
+ */
+_PROTOTYPE(extern void init_lsof_result,(void));
+_PROTOTYPE(extern void add_lsof_entry,(const char *command, int pid, const char *user, 
+                                      const char *fd, const char *type, const char *device,
+                                      const char *size_off, const char *node, const char *name));
+_PROTOTYPE(extern void free_lsof_result,(void));
+_PROTOTYPE(extern lsof_result_t* get_lsof_result,(void));
 
 # endif	/* !defined(PROTO_H) */

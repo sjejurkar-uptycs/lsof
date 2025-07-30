@@ -1641,7 +1641,7 @@ print_proc(output_buffer *g_buf)
 	    }
 	    if (st == 0 && FieldSel[LSOF_FIX_NAME].st) {
 		putchar(LSOF_FID_NAME);
-		printname(0, g_buf);
+		printname(0);
 		putchar(Terminator);
 		lc++;
 	    }
