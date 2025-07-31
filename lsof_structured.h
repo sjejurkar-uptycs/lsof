@@ -16,6 +16,12 @@ extern void add_lsof_entry(const char *command, int pid, int parent_pid, const c
 extern void free_lsof_result(void);
 extern lsof_result_t* get_lsof_result(void);
 
+// Main lsof function
+extern lsof_result_t* run_lsof(void);
+
+// Core lsof function (for direct C++ access)
+extern int run_lsof_core(void);
+
 #ifdef __cplusplus
 }
 #endif

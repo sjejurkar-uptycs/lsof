@@ -6,9 +6,9 @@ EXTRA_DIST = 00.README.FIRST 00CREDITS 00DCACHE 00DIALECTS 00DIST 00FAQ 00LSOF-L
 EXTRA_DIST += tests/00README tests/TestDB tests/CkTestDB tests/Makefile tests/LsofTest.h check.bash
 
 # Dialect neutral sources
-lsof_SOURCES = arg.c main.c misc.c node.c print.c proc.c store.c usage.c util.c \
+lsof_SOURCES = arg.c lsof_core.c main.c misc.c node.c print.c proc.c store.c usage.c util.c \
 	lib/ckkv.c lib/dvch.c lib/fino.c lib/isfn.c lib/lkud.c lib/pdvn.c lib/prfp.c lib/ptti.c lib/rdev.c lib/rnmt.c lib/rmnt.c lib/rnam.c lib/rnch.c lib/rnmh.c
-lsof_SOURCES += lsof.h lsof_fields.h proto.h hash.h
+lsof_SOURCES += lsof.h lsof_fields.h proto.h hash.h lsof_structured.h
 DIALECT_ROOT = $(top_srcdir)/dialects
 DIALECT_PATH = $(DIALECT_ROOT)/$(LSOF_DIALECT_DIR)
 
