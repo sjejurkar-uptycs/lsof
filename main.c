@@ -10,12 +10,22 @@ extern int run_lsof_core(void);
 lsof_result_t* run_lsof(void) {
     // Initialize the structured result
     init_lsof_result();
+    printf("DEBUG: run_lsof() - init_lsof_result() called\n");
     
     // Run lsof core function
+    printf("DEBUG: run_lsof() - calling run_lsof_core()\n");
     run_lsof_core();
+    printf("DEBUG: run_lsof() - run_lsof_core() completed\n");
     
     // Get and return the structured result
     lsof_result_t* result = get_lsof_result();
+    printf("DEBUG: run_lsof() - get_lsof_result() returned: %p\n", (void*)result);
+    
+    if (result) {
+        printf("DEBUG: run_lsof() - result->count = %d\n", result->count);
+    } else {
+        printf("DEBUG: run_lsof() - result is NULL!\n");
+    }
     
     return result;
 }
@@ -62,13 +72,19 @@ int main(int argc, char *argv[]) {
     printf("=== LSOF Structured Data Test ===\n");
     
     // Run lsof and get structured data
+    printf("DEBUG: main() - calling run_lsof()\n");
     lsof_result_t* result = run_lsof();
+    printf("DEBUG: main() - run_lsof() returned: %p\n", (void*)result);
     
     // Print the results
+    printf("DEBUG: main() - calling print_lsof_result()\n");
     print_lsof_result(result);
+    printf("DEBUG: main() - print_lsof_result() completed\n");
     
     // Clean up
+    printf("DEBUG: main() - calling free_lsof_result_wrapper()\n");
     free_lsof_result_wrapper(result);
+    printf("DEBUG: main() - cleanup completed\n");
     
     return 0;
 }
