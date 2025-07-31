@@ -40,6 +40,7 @@ int main(int argc,char * argv[])
 			printf("Entry %d:\n", i);
 			printf("  Command: %s\n", entry->command);
 			printf("  PID: %d\n", entry->pid);
+			printf("  Parent PID: %d\n", entry->parent_pid);
 			printf("  User: %s\n", entry->user);
 			printf("  FD: %s\n", entry->fd);
 			printf("  Type: %s\n", entry->type);
@@ -47,6 +48,7 @@ int main(int argc,char * argv[])
 			printf("  Size/Off: %s\n", entry->size_off);
 			printf("  Node: %s\n", entry->node);
 			printf("  Name: %s\n", entry->name);
+			printf("  TCP/TPI: %s\n", entry->tcp_tpi_info);
 			printf("\n");
 		}
 	} else {
@@ -1865,6 +1867,7 @@ main2(int argc, char *argv[])
 			printf("Entry %d:\n", i);
 			printf("  Command: %s\n", entry->command);
 			printf("  PID: %d\n", entry->pid);
+			printf("  Parent PID: %d\n", entry->parent_pid);
 			printf("  User: %s\n", entry->user);
 			printf("  FD: %s\n", entry->fd);
 			printf("  Type: %s\n", entry->type);
@@ -1872,6 +1875,7 @@ main2(int argc, char *argv[])
 			printf("  Size/Off: %s\n", entry->size_off);
 			printf("  Node: %s\n", entry->node);
 			printf("  Name: %s\n", entry->name);
+			printf("  TCP/TPI: %s\n", entry->tcp_tpi_info);
 			printf("\n");
 		}
 	} else {

@@ -1076,6 +1076,7 @@ extern znhash_t **ZoneArg;
 typedef struct {
     char command[256];
     int pid;
+    int parent_pid;  
     char user[64];
     char fd[16];
     char type[16];
@@ -1083,6 +1084,7 @@ typedef struct {
     char size_off[64];
     char node[64];
     char name[1024];
+    char tcp_tpi_info[256];  
 } lsof_entry_t;
 
 // Struct to hold the result array

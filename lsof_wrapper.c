@@ -7,6 +7,7 @@
 // Global variables to store the current entry being built
 static char current_command[256];
 static int current_pid;
+static int current_parent_pid;
 static char current_user[64];
 static char current_fd[16];
 static char current_type[16];
@@ -14,11 +15,13 @@ static char current_device[64];
 static char current_size_off[64];
 static char current_node[64];
 static char current_name[1024];
+static char current_tcp_tpi_info[256];
 
 // Function to reset current entry
 static void reset_current_entry() {
     memset(current_command, 0, sizeof(current_command));
     current_pid = 0;
+    current_parent_pid = 0;
     memset(current_user, 0, sizeof(current_user));
     memset(current_fd, 0, sizeof(current_fd));
     memset(current_type, 0, sizeof(current_type));
@@ -26,14 +29,15 @@ static void reset_current_entry() {
     memset(current_size_off, 0, sizeof(current_size_off));
     memset(current_node, 0, sizeof(current_node));
     memset(current_name, 0, sizeof(current_name));
+    memset(current_tcp_tpi_info, 0, sizeof(current_tcp_tpi_info));
 }
 
 // Function to add current entry to result
 static void add_current_entry() {
     if (current_pid > 0) {  // Only add if we have a valid entry
-        add_lsof_entry(current_command, current_pid, current_user,
+        add_lsof_entry(current_command, current_pid, current_parent_pid, current_user,
                       current_fd, current_type, current_device,
-                      current_size_off, current_node, current_name);
+                      current_size_off, current_node, current_name, current_tcp_tpi_info);
     }
     reset_current_entry();
 }

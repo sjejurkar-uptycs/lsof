@@ -1160,9 +1160,23 @@ print_file()
 	            // Device name would be added here
 	        }
 	        
+	        // Extract TCP/TPI info if available
+	        char tcp_tpi_buf[256];
+	        tcp_tpi_buf[0] = '\0';
+	        if (Lf->lts.type >= 0) {
+	            // TCP/TPI state information is available
+	            if (Lf->lts.type == 0) {
+	                // TCP state
+	                snprintf(tcp_tpi_buf, sizeof(tcp_tpi_buf), "TCP:%d", Lf->lts.state.i);
+	            } else if (Lf->lts.type == 1) {
+	                // TPI state
+	                snprintf(tcp_tpi_buf, sizeof(tcp_tpi_buf), "TPI:%u", Lf->lts.state.ui);
+	            }
+	        }
+	        
 	        // Add the entry to structured result
-	        add_lsof_entry(command_buf, Lp->pid, user_buf, fd_buf, type_buf, 
-	                      device_buf, size_off_buf, node_buf, name_buf);
+	        add_lsof_entry(command_buf, Lp->pid, Lp->ppid, user_buf, fd_buf, type_buf, 
+	                      device_buf, size_off_buf, node_buf, name_buf, tcp_tpi_buf);
 	    }
 
 	}
@@ -2912,9 +2926,10 @@ void init_lsof_result() {
     }
 }
 
-void add_lsof_entry(const char* command, int pid, const char* user, 
+void add_lsof_entry(const char* command, int pid, int parent_pid, const char* user, 
                    const char* fd, const char* type, const char* device,
-                   const char* size_off, const char* node, const char* name) {
+                   const char* size_off, const char* node, const char* name, 
+                   const char* tcp_tpi_info) {
     if (!g_result) return;
     
     // Expand capacity if needed
@@ -2933,6 +2948,7 @@ void add_lsof_entry(const char* command, int pid, const char* user,
     lsof_entry_t* entry = &g_result->entries[g_result->count];
     strncpy(entry->command, command ? command : "", sizeof(entry->command) - 1);
     entry->pid = pid;
+    entry->parent_pid = parent_pid;
     strncpy(entry->user, user ? user : "", sizeof(entry->user) - 1);
     strncpy(entry->fd, fd ? fd : "", sizeof(entry->fd) - 1);
     strncpy(entry->type, type ? type : "", sizeof(entry->type) - 1);
@@ -2940,6 +2956,7 @@ void add_lsof_entry(const char* command, int pid, const char* user,
     strncpy(entry->size_off, size_off ? size_off : "", sizeof(entry->size_off) - 1);
     strncpy(entry->node, node ? node : "", sizeof(entry->node) - 1);
     strncpy(entry->name, name ? name : "", sizeof(entry->name) - 1);
+    strncpy(entry->tcp_tpi_info, tcp_tpi_info ? tcp_tpi_info : "", sizeof(entry->tcp_tpi_info) - 1);
     
     g_result->count++;
 }
