@@ -1283,7 +1283,8 @@ run_lsof_core(void)
  */
 	if (MntSup == 1) {
 	    (void) readmnt();
-	    Exit(LSOF_SUCCESS);
+	    // Don't call Exit() here - let the caller handle program termination
+	    return LSOF_SUCCESS;
 	}
 #endif	/* defined(HASMNTSUP) */
 
@@ -1821,7 +1822,7 @@ run_lsof_core(void)
 	    rv = ev;
 	if (!rv && ErrStat)
 	    rv = LSOF_ERROR;
-	Exit(rv);
+	// Don't call Exit() here - let the caller handle program termination
 	return(rv);		/* to make code analyzers happy */
 }
 
