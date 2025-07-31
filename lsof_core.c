@@ -1233,7 +1233,7 @@ run_lsof_core(void)
 /*
  * Process the file arguments.
  */
-	if (GOx1 < argc) {
+	if (GOx1 < argc && argc > 1) {
 	    if (ck_file_arg(GOx1, argc, argv, Ffilesys, 0, (struct stat *)NULL, FsearchErr == 0))
 		Error();
 	}
