@@ -53,6 +53,7 @@ void print_lsof_result(lsof_result_t* result) {
 void free_lsof_result_wrapper(lsof_result_t* result) {
     if (result) {
         free_lsof_result();
+        printf("DEBUG: Structured data freed successfully\n");
     }
 }
 

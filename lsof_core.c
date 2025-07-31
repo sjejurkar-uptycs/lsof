@@ -1814,9 +1814,8 @@ run_lsof_core(void)
 	    }
 	}
 	/*
-	 * Clean up the structured result
+	 * Note: Don't free the structured result here - let the caller handle it
 	 */
-	free_lsof_result();
 
 	if (!rv && rc)
 	    rv = ev;
